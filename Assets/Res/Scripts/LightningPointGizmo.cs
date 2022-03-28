@@ -9,6 +9,6 @@ public class LightningPointGizmo : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = colour;
-        Gizmos.DrawSphere(transform.position, 0.05f);
+        Gizmos.DrawSphere(transform.position, 0.5f);
     }
 }

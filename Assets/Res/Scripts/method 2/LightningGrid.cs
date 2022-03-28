@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 // GENERIC GRID DATA CLASS **********************************************************************************************************************
 [System.Serializable]
-public class Grid<T> where T : class
+public class Grid<T> where T : class, new()
 {
     // Grid Settings
     [SerializeField, Min(1)] private int width = 2;
@@ -46,6 +45,15 @@ public class Grid<T> where T : class
         originPosition = Vector3.zero;
     }
 
+    public Grid(Grid<T> other)
+    {
+        this.width = other.width;
+        this.height = other.height;
+        this.depth = other.depth;
+        this.cellSize = other.cellSize;
+        this.originPosition = other.originPosition;
+    }
+
     // OPERATOR OVERLOADS *********************************************************************
     public T this[int x, int y, int z]
     {
@@ -68,8 +76,10 @@ public class Grid<T> where T : class
     // INITIALISATION METHODS *****************************************************************
     virtual public void Init()
     {
-        grid = new T[width, height, depth];
+        grid = new T[width, height, depth];//.Populate(()=> new T());
     }
+
+    public void Populate(Func<T> provider) => grid.Populate(provider);
 
     // NODE INFORMATION METHODS ***************************************************************
     public bool NodeExists(Vector3Int pos) => NodeExists(pos.x, pos.y, pos.z);
