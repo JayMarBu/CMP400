@@ -79,8 +79,6 @@ public class Grid<T> where T : class, new()
         grid = new T[width, height, depth];//.Populate(()=> new T());
     }
 
-    public void Populate(Func<T> provider) => grid.Populate(provider);
-
     // NODE INFORMATION METHODS ***************************************************************
     public bool NodeExists(Vector3Int pos) => NodeExists(pos.x, pos.y, pos.z);
 

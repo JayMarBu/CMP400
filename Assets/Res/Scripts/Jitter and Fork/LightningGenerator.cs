@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-struct LineSegment
+/*struct JFLineSegment
 {
     public Vector3 p1;
     public Vector3 p2;
     public Color colour;
 
-    public LineSegment(int inVal = 0)
+    public JFLineSegment(int inVal = 0)
     {
         p1 = Vector3.zero;
         p2 = Vector3.zero;
@@ -24,12 +24,12 @@ struct LineSegment
     //LineSegment Transform(Transform transform);
 
     public void SetColour(Color in_colour) { colour = in_colour; }
-};
+};*/
 
 public class LightningGenerator : MonoBehaviour
 {
-    [SerializeField,HideInInspector] Transform m_startPoint;
-    [SerializeField,HideInInspector] Transform m_endPoint;
+    [SerializeField, HideInInspector] Transform m_startPoint;
+    [SerializeField, HideInInspector] Transform m_endPoint;
 
     [SerializeField] private List<LineSegment> m_lines;
 
@@ -56,7 +56,8 @@ public class LightningGenerator : MonoBehaviour
         List<List<LineSegment>> lines = new List<List<LineSegment>>();
 
         LineSegment line = new LineSegment();
-        line.SetByPosition(m_startPoint.position, m_endPoint.position);
+        line.p1 = m_startPoint.position;
+        line.p2 = m_endPoint.position;
 
         currentLayerLines.Add(line);
 
@@ -71,8 +72,6 @@ public class LightningGenerator : MonoBehaviour
 
                 float r = 0.25f + (Mathf.InverseLerp(0f, (float)Iterations, (float)i)*0.75f);
                 float gb = Mathf.InverseLerp(0, (float)Iterations + 1, (float)i + 1);
-                Color colour = new Color(r, gb * r, gb * r);
-                Color forkColour = new Color(gb * r, r, gb * r);
 
                 Vector3 startPos = previousLayerLines[l].p1;
                 Vector3 endPos = previousLayerLines[l].p2;
@@ -88,10 +87,9 @@ public class LightningGenerator : MonoBehaviour
 
                 float trueAngle = (counter == 0) ? angle + baseAngle : angle - baseAngle;
 
-                Vector3 splitPos = CalculateSplitPoint(startPos, segLen, (counter == 0) ? angle + baseAngle : angle - baseAngle);
+                Vector3 splitPos = CalculateSplitPoint(startPos, segLen, trueAngle);
 
                 // Fork
-                //Vector3 forkPos = CalculateSplitPoint(splitPos, segLen * 0.5f, (counter == 0) ? (2f * angle) - baseAngle : (2f * angle) + baseAngle);
                 Vector3 forkPos = CalculateForkPoint(splitPos, endPos, segLen *0.5f);
 
                 // build line segment
@@ -100,7 +98,6 @@ public class LightningGenerator : MonoBehaviour
                 newLines[0].SetByPosition(startPos, splitPos);
                 newLines[1].SetByPosition(splitPos, endPos);
                 newLines[2].SetByPosition(splitPos, forkPos);
-                newLines[2].SetColour(Color.red);
 
                 currentLayerLines.Add(newLines[0]);
                 currentLayerLines.Add(newLines[1]);

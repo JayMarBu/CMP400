@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class LightningPointGizmo : MonoBehaviour
 {
-    [SerializeField] Color colour;
+    [SerializeField] public Color colour;
+    [SerializeField] bool isArrow = false;
 
     private void OnDrawGizmos()
     {
         Gizmos.color = colour;
-        Gizmos.DrawSphere(transform.position, 0.5f);
+        if(isArrow)
+        {
+            Gizmos.DrawSphere(transform.position, 0.1f);
+        }
+        else
+        {
+            Gizmos.DrawSphere(transform.position, 0.5f);
+        }
     }
 }

@@ -69,8 +69,6 @@ public class GridManager : MonoBehaviour
                 {
                     Vector3 pos = new Vector3(o.x + x * m_grid.CellSize, o.y + y * m_grid.CellSize, o.z + z * m_grid.CellSize);
 
-                    //Handles.Label(pos, "0");
-
                     bool drawSquare = m_drawGrid;
                     
                     Gizmos.color = m_gridColour;
@@ -99,15 +97,25 @@ public class GridManager : MonoBehaviour
                             Handles.Label(pos, m_grid[x, y, z].phi.ToString());
                     }
 
-                    if (m_drawGridInfoAsColour.drawGridInfoAsColour && m_grid != null && m_grid[x, y, z] != null)
+                    bool drawCube = m_drawGridInfoAsColour.drawGridInfoAsColour;
+
+                    if (m_grid != null && m_grid[x, y, z] != null)
                     {
-                        float phi = 1 - m_grid[x, y, z].phi;
+                        if (m_grid[x, y, z].isLightning)
+                            drawCube = true;
 
-                        float a = Mathf.Exp((phi * m_drawGridInfoAsColour.colourFadeModifier) - m_drawGridInfoAsColour.colourFadeModifier);
+                        if (drawCube)
+                        {
+                            float phi = 1 - m_grid[x, y, z].phi;
 
-                        Gizmos.color = new Color( phi, phi, phi, (m_drawGridInfoAsColour.useAlphaModifier)?a:1);
+                            float a = Mathf.Exp((phi * m_drawGridInfoAsColour.colourFadeModifier) - m_drawGridInfoAsColour.colourFadeModifier);
 
-                        Gizmos.DrawCube(pos, new Vector3(m_grid.CellSize / 3, m_grid.CellSize / 3, m_grid.CellSize / 3));
+                            Gizmos.color = new Color(phi, phi, phi, (m_drawGridInfoAsColour.useAlphaModifier) ? a : 1);
+
+                            float scale = ((m_grid[x, y, z].isLightning) ? 1.5f : 3f) * ((m_drawGridInfoAsColour.drawGridInfoAsColour)?1f:4f);
+
+                            Gizmos.DrawCube(pos, new Vector3(m_grid.CellSize / scale, m_grid.CellSize / scale, m_grid.CellSize / scale));
+                        }
                     }
                 }
             }
