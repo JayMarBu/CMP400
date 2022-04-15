@@ -16,19 +16,28 @@ public class BaileyetalGen : MonoBehaviour
         public static GasProperties Air     = new GasProperties(11, 4, 0.2f, 0.02f);
         public static GasProperties N2      = new GasProperties(9, 3, 0.12f, 0.03f);
 
-        [SerializeField] public float L_mean;
-        [SerializeField] public float L_std;
 
-        [SerializeField] public float A_mean;
-        [SerializeField] public float A_std;
+        [SerializeField] public RangePair L;
+        [SerializeField] public RangePair A;
+        //[SerializeField] public float L_mean;
+        //[SerializeField] public float L_std;
+
+        //[SerializeField] public float A_mean;
+        //[SerializeField] public float A_std;
+
+        public GasProperties(RangePair l, RangePair a)
+        {
+            L = l;
+            A = a;
+        }
 
         public GasProperties(float l_mean, float l_std, float a_mean, float a_std)
         {
-            L_mean = l_mean;
-            L_std = l_std;
+            L.mean = l_mean;
+            L.std = l_std;
 
-            A_mean = a_mean;
-            A_std = a_std;
+            A.mean = a_mean;
+            A.std = a_std;
         }
     }
 
@@ -42,8 +51,9 @@ public class BaileyetalGen : MonoBehaviour
         [Tooltip("the gas pressure at the starting point"), SerializeField]                     public float P_init;
         [Tooltip("the gas pressure gradient"), SerializeField]                                  public float P_m;
 
-        [Tooltip("the mean angle between two segments"), SerializeField]                        public float Angle_mean;
-        [Tooltip("the standard deviation of the angle between two segments"), SerializeField]   public float Angle_std;
+        [Tooltip("the mean angle and standard deviation between two segments"), SerializeField] public RangePair Angle;
+        //[Tooltip("the mean angle between two segments"), SerializeField]                        public float Angle_mean;
+        //[Tooltip("the standard deviation of the angle between two segments"), SerializeField]   public float Angle_std;
 
 
         [Tooltip("properties relating to the local atmosphere"), SerializeField]                public GasProperties gasProperties;
@@ -58,6 +68,7 @@ public class BaileyetalGen : MonoBehaviour
 
     // private values
     private Vector3 m_initialDirection;
+    private RangePair m_halfedAngle;
 
     private List<LineSegment> m_finishedList;
     private Queue<LineSegment> m_segmentQueue;
@@ -91,13 +102,13 @@ public class BaileyetalGen : MonoBehaviour
         LineSegment line = new LineSegment();
 
         line.d = genParams.D_init;
-        line.L = line.d * BoxMuller.Generate(genParams.gasProperties.L_mean, genParams.gasProperties.L_std);
+        line.L = line.d * BoxMuller.Generate(genParams.gasProperties.L);
 
         line.p1 = startPos;
         line.p2 = startPos + (m_initialDirection * line.L);
 
         line.p = genParams.P_init;
-        line.d_min = (1 / line.p) * (BoxMuller.Generate(genParams.gasProperties.A_mean, genParams.gasProperties.A_std));
+        line.d_min = (1 / line.p) * (BoxMuller.Generate(genParams.gasProperties.A));
 
         m_finishedList.Add(line);
 

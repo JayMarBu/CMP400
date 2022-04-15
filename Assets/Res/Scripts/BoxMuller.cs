@@ -3,6 +3,7 @@ using UnityEngine;
 
 public static class BoxMuller
 {
+	public static float Generate(RangePair pair) => Generate(pair.mean, pair.std);
 	public static float Generate(float mu, float sigma)
     {
 		const float two_pi = 2*Mathf.PI;

@@ -17,3 +17,22 @@ public class LineSegment
 
     public void SetByPosition(Vector3 start_point, Vector3 end_point) { p1 = start_point; p2 = end_point; }
 }
+
+[System.Serializable]
+public struct RangePair
+{
+    [SerializeField] public float mean;
+    [SerializeField] public float std;
+
+    public RangePair(float m, float s)
+    {
+        mean = m;
+        std = s;
+    }
+
+    public RangePair(float m)
+    {
+        mean = m;
+        std = 0;
+    }
+}

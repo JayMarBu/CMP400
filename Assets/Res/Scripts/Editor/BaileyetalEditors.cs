@@ -32,7 +32,16 @@ public class GasPropertiesPropDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        return (property.isExpanded)?((lineHeight + padding) * 4):(lineHeight + padding);
+        float trueLineHeight = lineHeight + padding;
+        float baseHeight = trueLineHeight * 4;
+
+        if (property.FindPropertyRelative("L").isExpanded)
+            baseHeight += trueLineHeight * 2f;
+
+        if (property.FindPropertyRelative("A").isExpanded)
+            baseHeight += trueLineHeight * 2f;
+
+        return (property.isExpanded)?baseHeight:trueLineHeight;
     }
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -54,14 +63,16 @@ public class GasPropertiesPropDrawer : PropertyDrawer
 
         var standardRect = new Rect(position.x, currentY, position.width, lineHeight);
 
-        EditorGUI.PropertyField(standardRect, property.FindPropertyRelative("L_mean"));
+        SerializedProperty prop = property.FindPropertyRelative("L");
+        EditorGUI.PropertyField(standardRect, prop, true);
 
-        currentY += lineHeight + padding;
+        currentY += (prop.isExpanded)?(lineHeight + padding) * 3: (lineHeight + padding);
         standardRect.y = currentY;
 
-        EditorGUI.PropertyField(standardRect, property.FindPropertyRelative("L_std"));
+        prop = property.FindPropertyRelative("A");
+        EditorGUI.PropertyField(standardRect, prop, true);
 
-        currentY += lineHeight + padding;
+        currentY += (prop.isExpanded) ? (lineHeight + padding) * 3 : (lineHeight + padding);
 
         float checkboxPos = position.width / 2;
 
@@ -70,21 +81,21 @@ public class GasPropertiesPropDrawer : PropertyDrawer
 
         if (GUI.Button(airRect, new GUIContent("Air")))
         {
-            property.FindPropertyRelative("L_mean").floatValue  = BaileyetalGen.GasProperties.Air.L_mean;
-            property.FindPropertyRelative("L_std").floatValue   = BaileyetalGen.GasProperties.Air.L_std;
+            property.FindPropertyRelative("L.mean").floatValue  = BaileyetalGen.GasProperties.Air.L.mean;
+            property.FindPropertyRelative("L.std").floatValue   = BaileyetalGen.GasProperties.Air.L.std;
 
-            property.FindPropertyRelative("A_mean").floatValue  = BaileyetalGen.GasProperties.Air.A_mean;
-            property.FindPropertyRelative("A_std").floatValue   = BaileyetalGen.GasProperties.Air.A_std;
+            property.FindPropertyRelative("A.mean").floatValue  = BaileyetalGen.GasProperties.Air.A.mean;
+            property.FindPropertyRelative("A.std").floatValue   = BaileyetalGen.GasProperties.Air.A.std;
             property.serializedObject.ApplyModifiedProperties();
         }
 
         if (GUI.Button(n2Rect, new GUIContent("N2")))
         {
-            property.FindPropertyRelative("L_mean").floatValue  = BaileyetalGen.GasProperties.N2.L_mean;
-            property.FindPropertyRelative("L_std").floatValue   = BaileyetalGen.GasProperties.N2.L_std;
+            property.FindPropertyRelative("L.mean").floatValue  = BaileyetalGen.GasProperties.N2.L.mean;
+            property.FindPropertyRelative("L.std").floatValue   = BaileyetalGen.GasProperties.N2.L.std;
 
-            property.FindPropertyRelative("A_mean").floatValue  = BaileyetalGen.GasProperties.N2.A_mean;
-            property.FindPropertyRelative("A_std").floatValue   = BaileyetalGen.GasProperties.N2.A_std;
+            property.FindPropertyRelative("A.mean").floatValue  = BaileyetalGen.GasProperties.N2.A.mean;
+            property.FindPropertyRelative("A.std").floatValue   = BaileyetalGen.GasProperties.N2.A.std;
             property.serializedObject.ApplyModifiedProperties();
         }
 
