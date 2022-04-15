@@ -95,9 +95,9 @@ public class LightningGenerator : MonoBehaviour
                 // build line segment
                 LineSegment[] newLines = new LineSegment[3];
 
-                newLines[0].SetByPosition(startPos, splitPos);
-                newLines[1].SetByPosition(splitPos, endPos);
-                newLines[2].SetByPosition(splitPos, forkPos);
+                newLines[0] = new LineSegment(startPos, splitPos);
+                newLines[1] = new LineSegment(splitPos, endPos);
+                newLines[2] = new LineSegment(splitPos, forkPos);
 
                 currentLayerLines.Add(newLines[0]);
                 currentLayerLines.Add(newLines[1]);
