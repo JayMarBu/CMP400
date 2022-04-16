@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class LightningGenerator : MonoBehaviour
 {
-    [SerializeField, HideInInspector] GenerationManager genManager;
+    [SerializeField] GenerationManager m_genManager;
+    [SerializeField, HideInInspector] LightningMeshGenerator m_meshGenerator; 
 
     public GenerationParameters genParams
     {
-        get { return genManager.Params; }
-        set { genManager.Params = value; }
+        get { return m_genManager.Params; }
+        set { m_genManager.Params = value; }
     }
 
     [SerializeField, HideInInspector] Transform m_startPoint;
@@ -21,7 +22,7 @@ public class LightningGenerator : MonoBehaviour
 
     private void Start()
     {
-        GenerareLightning();
+        //GenerareLightning();
     }
 
     public void Clear()
@@ -42,6 +43,7 @@ public class LightningGenerator : MonoBehaviour
         List<List<LineSegment>> lines = new List<List<LineSegment>>();
 
         LineSegment line = new LineSegment();
+        line.d = 0.2f;
         line.p1 = m_startPoint.position;
         line.p2 = m_endPoint.position;
 
@@ -79,8 +81,11 @@ public class LightningGenerator : MonoBehaviour
                 LineSegment[] newLines = new LineSegment[3];
 
                 newLines[0] = new LineSegment(startPos, splitPos);
+                newLines[0].d = 0.2f;
                 newLines[1] = new LineSegment(splitPos, endPos);
+                newLines[1].d = 0.2f;
                 newLines[2] = new LineSegment(splitPos, forkPos);
+                newLines[2].d = 0.2f;
 
                 currentLayerLines.Add(newLines[0]);
                 currentLayerLines.Add(newLines[1]);
@@ -92,6 +97,8 @@ public class LightningGenerator : MonoBehaviour
         }
 
         m_lines = currentLayerLines;
+
+        m_meshGenerator.GenerateMesh(m_lines);
     }
 
     float CalculateBaseAngle(LineSegment line)

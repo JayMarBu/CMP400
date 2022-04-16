@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class BaileyetalGen : MonoBehaviour
 {
-    [SerializeField, HideInInspector] GenerationManager genManager;
+    [SerializeField ] GenerationManager m_genManager;
+    [SerializeField, HideInInspector] LightningMeshGenerator m_meshGenerator;
 
     [SerializeField, HideInInspector] Transform m_startPoint;
     [SerializeField, HideInInspector] Transform m_endPoint;
@@ -14,8 +15,8 @@ public class BaileyetalGen : MonoBehaviour
 
     public GenerationParameters genParams 
     { 
-        get { return genManager.Params; }
-        set { genManager.Params = value; }
+        get { return m_genManager.Params; }
+        set { m_genManager.Params = value; }
     }
 
     // private values
@@ -58,6 +59,8 @@ public class BaileyetalGen : MonoBehaviour
 
         // recurse generating more
         GenerateChildren();
+
+        m_meshGenerator.GenerateMesh(m_finishedList);
     }
 
     public void GenerateChildren(int depth = 0)
