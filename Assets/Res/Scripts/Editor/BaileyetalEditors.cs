@@ -24,7 +24,7 @@ public class BaileyetalEditor : Editor
     }
 }
 
-[CustomPropertyDrawer(typeof(BaileyetalGen.GasProperties))]
+[CustomPropertyDrawer(typeof(GasProperties))]
 public class GasPropertiesPropDrawer : PropertyDrawer
 {
     float lineHeight { get { return EditorGUIUtility.singleLineHeight; } }
@@ -81,21 +81,21 @@ public class GasPropertiesPropDrawer : PropertyDrawer
 
         if (GUI.Button(airRect, new GUIContent("Air")))
         {
-            property.FindPropertyRelative("L.mean").floatValue  = BaileyetalGen.GasProperties.Air.L.mean;
-            property.FindPropertyRelative("L.std").floatValue   = BaileyetalGen.GasProperties.Air.L.std;
+            property.FindPropertyRelative("L.mean").floatValue  = GasProperties.Air.L.mean;
+            property.FindPropertyRelative("L.std").floatValue   = GasProperties.Air.L.std;
 
-            property.FindPropertyRelative("A.mean").floatValue  = BaileyetalGen.GasProperties.Air.A.mean;
-            property.FindPropertyRelative("A.std").floatValue   = BaileyetalGen.GasProperties.Air.A.std;
+            property.FindPropertyRelative("A.mean").floatValue  = GasProperties.Air.A.mean;
+            property.FindPropertyRelative("A.std").floatValue   = GasProperties.Air.A.std;
             property.serializedObject.ApplyModifiedProperties();
         }
 
         if (GUI.Button(n2Rect, new GUIContent("N2")))
         {
-            property.FindPropertyRelative("L.mean").floatValue  = BaileyetalGen.GasProperties.N2.L.mean;
-            property.FindPropertyRelative("L.std").floatValue   = BaileyetalGen.GasProperties.N2.L.std;
+            property.FindPropertyRelative("L.mean").floatValue  = GasProperties.N2.L.mean;
+            property.FindPropertyRelative("L.std").floatValue   = GasProperties.N2.L.std;
 
-            property.FindPropertyRelative("A.mean").floatValue  = BaileyetalGen.GasProperties.N2.A.mean;
-            property.FindPropertyRelative("A.std").floatValue   = BaileyetalGen.GasProperties.N2.A.std;
+            property.FindPropertyRelative("A.mean").floatValue  = GasProperties.N2.A.mean;
+            property.FindPropertyRelative("A.std").floatValue   = GasProperties.N2.A.std;
             property.serializedObject.ApplyModifiedProperties();
         }
 

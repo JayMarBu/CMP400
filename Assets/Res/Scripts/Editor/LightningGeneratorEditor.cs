@@ -13,7 +13,6 @@ public class LightningGeneratorEditor : Editor
         if (GUILayout.Button("Generate"))
         {
             LightningGenerator item = (LightningGenerator)target;
-            item.Clear();
             item.GenerareLightning();
         }
 

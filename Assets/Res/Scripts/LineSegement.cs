@@ -5,8 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class LineSegment
 {
-    [HideInInspector] public LineSegment parent;
-    [HideInInspector] public List<LineSegment> child;
+    [HideInInspector, NonSerialized] public LineSegment parent;
+    [HideInInspector, NonSerialized] public List<LineSegment> child;
 
     [ReadOnly] public float d;
     [ReadOnly] public float d_min;
@@ -16,8 +16,6 @@ public class LineSegment
     [ReadOnly] public Vector3 p1;
     [ReadOnly] public Vector3 p2;
 
-    public Vector3 V;
-
     public LineSegment()
     {
         
@@ -25,10 +23,9 @@ public class LineSegment
 
     public LineSegment(Vector3 start_point, Vector3 end_point)
     {
-        SetByPosition(start_point, end_point);
+        p1 = start_point;
+        p2 = end_point;
     }
-
-    public void SetByPosition(Vector3 start_point, Vector3 end_point) { p1 = start_point; p2 = end_point; }
 
     public Vector3 direction
     {

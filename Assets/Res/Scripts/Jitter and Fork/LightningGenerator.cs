@@ -50,6 +50,8 @@ public class LightningGenerator : MonoBehaviour
 
     public void GenerareLightning()
     {
+        Clear();
+
         List<LineSegment> previousLayerLines;
         List<LineSegment> currentLayerLines = new List<LineSegment>();
 
@@ -70,9 +72,6 @@ public class LightningGenerator : MonoBehaviour
             {
                 int counter = l % 2;
 
-                float r = 0.25f + (Mathf.InverseLerp(0f, (float)Iterations, (float)i)*0.75f);
-                float gb = Mathf.InverseLerp(0, (float)Iterations + 1, (float)i + 1);
-
                 Vector3 startPos = previousLayerLines[l].p1;
                 Vector3 endPos = previousLayerLines[l].p2;
 
@@ -90,7 +89,7 @@ public class LightningGenerator : MonoBehaviour
                 Vector3 splitPos = CalculateSplitPoint(startPos, segLen, trueAngle);
 
                 // Fork
-                Vector3 forkPos = CalculateForkPoint(splitPos, endPos, segLen *0.5f);
+                Vector3 forkPos = CalculateForkPoint(splitPos, endPos, segLen *0.75f);
 
                 // build line segment
                 LineSegment[] newLines = new LineSegment[3];
@@ -151,7 +150,7 @@ public class LightningGenerator : MonoBehaviour
 		 opp = hyp * sin(theta)
 		 adj = hyp * cos(theta)
 		*/
-		float xlen, ylen, zlen;
+		float xlen, ylen;
 
         Vector2 xz = Random.insideUnitCircle.normalized;
 
@@ -178,6 +177,34 @@ public class LightningGenerator : MonoBehaviour
         Vector3 forkPos = splitPos + (dirVec * len);
 
         return forkPos;
+    }
+
+    public void BetterGenerateLightning()
+    {
+        Clear();
+
+        List<LineSegment> previousLayerLines;
+        List<LineSegment> currentLayerLines = new List<LineSegment>();
+
+        LineSegment line = new LineSegment();
+        line.p1 = m_startPoint.position;
+        line.p2 = m_endPoint.position;
+
+        currentLayerLines.Add(line);
+
+        for (int i = 0; i < Iterations; i++)
+        {
+            previousLayerLines = new List<LineSegment>(currentLayerLines);
+            currentLayerLines.Clear();
+
+            for (int l = 0; l < previousLayerLines.Count; l++)
+            {
+                Vector3 startPos = previousLayerLines[l].p1;
+                Vector3 endPos = previousLayerLines[l].p2;
+
+                float angle = BoxMuller.Generate(Angle, StandardDeviation) - Angle;
+            }
+        }
     }
 
     private void OnDrawGizmos()

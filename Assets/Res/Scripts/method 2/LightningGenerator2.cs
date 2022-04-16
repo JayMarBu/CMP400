@@ -101,7 +101,7 @@ public class LightningGenerator2 : MonoBehaviour
 
     public void SolvePotential()
     { 
-        float n = 1f / 4f;
+        //float n = 1f / 4f;
 
         for (int x = 0; x < grid.Width; x++)
         {
