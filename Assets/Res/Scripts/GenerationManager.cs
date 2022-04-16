@@ -32,19 +32,27 @@ public class GenerationParameters
 {
     public static readonly float nv = 3f / 100f;
 
-    [Header("Editable values")]
-    [Tooltip("the initial voltage of the system"), SerializeField] public float V_init;
-    [Tooltip("the gas pressure at the starting point"), SerializeField] public float P_init;
-    [Tooltip("the gas pressure gradient"), SerializeField] public float P_m;
+    [Header("Universal parameters")]
+    [Tooltip("the initial voltage of the system"), SerializeField]                          public float V_init;
+    [Tooltip("the gas pressure at the starting point"), SerializeField]                     public float P_init;
+    [Tooltip("the gas pressure gradient"), SerializeField]                                  public float P_m;
 
     [Tooltip("the mean angle and standard deviation between two segments"), SerializeField] public RangePair Angle;
 
-    [Tooltip("properties relating to the local atmosphere"), SerializeField] public GasProperties gasProperties;
+    [Tooltip("properties relating to the local atmosphere"), SerializeField]                public GasProperties gasProperties;
 
-    [Tooltip("maximum amount of recursions allowed"), SerializeField] public int maxRecursionDepth;
+    [Header("Bailey et al parameters")]
+    [Tooltip("maximum amount of recursions allowed"), SerializeField]                       public int maxRecursionDepth;
+
+    [Header("Jitter and Fork parameters")]
+    [Tooltip("the number of iterations to be used"), SerializeField]                        public int iterations;
+    [Tooltip(""), SerializeField]                                                           public float splitFraction;
+
+    [Header("Render Parameters")]
+    [SerializeField]                                                                        public float jitterUnit;
 
     [Header("Read-only values")]
-    [ReadOnly, Tooltip("the starting diameter of the system"), SerializeField] public float D_init;
+    [ReadOnly, Tooltip("the starting diameter of the system"), SerializeField]              public float D_init;
 }
 
 public class GenerationManager : Singleton<GenerationManager>
@@ -54,14 +62,13 @@ public class GenerationManager : Singleton<GenerationManager>
     [SerializeField, HideInInspector] private BaileyetalGen m_baileyEtAlGenerator;
     [SerializeField, HideInInspector] private LightningGenerator m_jitterAndForkGenerator;
 
-    /*private void OnGUI()
+    private void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 150, 100), "Generate All"))
+        if (GUI.Button(new Rect(10, 10, 150, 20), "Generate All"))
         {
-            print("You clicked the button!");
             GenerateAll();
         }
-    }*/
+    }
 
     private void OnValidate()
     {

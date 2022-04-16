@@ -2,40 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*struct JFLineSegment
-{
-    public Vector3 p1;
-    public Vector3 p2;
-    public Color colour;
-
-    public JFLineSegment(int inVal = 0)
-    {
-        p1 = Vector3.zero;
-        p2 = Vector3.zero;
-        colour = Color.white;
-    }
-
-    public void SetByPosition(Vector3 start_point, Vector3 end_point) { p1 = start_point; p2 = end_point; }
-    public void SetByDirection(Vector3 start_point, Vector3 direction_vector, float length)
-    {
-        p1 = start_point;
-        p2 = p1 + (Vector3.Normalize(direction_vector) * length);
-    }
-    //LineSegment Transform(Transform transform);
-
-    public void SetColour(Color in_colour) { colour = in_colour; }
-};*/
-
 public class LightningGenerator : MonoBehaviour
 {
+    [SerializeField, HideInInspector] GenerationManager genManager;
+
+    public GenerationParameters genParams
+    {
+        get { return genManager.Params; }
+        set { genManager.Params = value; }
+    }
+
     [SerializeField, HideInInspector] Transform m_startPoint;
     [SerializeField, HideInInspector] Transform m_endPoint;
 
     [SerializeField] private List<LineSegment> m_lines;
 
-    public float Angle;
-    public float StandardDeviation;
-    public int Iterations;
+    private RangePair m_halfedAngle;
 
     private void Start()
     {
@@ -46,6 +28,8 @@ public class LightningGenerator : MonoBehaviour
     {
         if(m_lines != null && m_lines.Count > 0)
             m_lines.Clear();
+
+        m_halfedAngle = genParams.Angle / 2;
     }
 
     public void GenerareLightning()
@@ -63,7 +47,7 @@ public class LightningGenerator : MonoBehaviour
 
         currentLayerLines.Add(line);
 
-        for (int i = 0; i < Iterations; i++)
+        for (int i = 0; i < genParams.iterations; i++)
         {
             previousLayerLines = new List<LineSegment>(currentLayerLines);
             currentLayerLines.Clear();
@@ -81,7 +65,7 @@ public class LightningGenerator : MonoBehaviour
                 float length = CalculateBaseLength(startPos, endPos);
 
                 // TODO: something funky is happening with these angles
-                float angle = BoxMuller.Generate(Angle, StandardDeviation) - Angle;
+                float angle = BoxMuller.Generate(genParams.Angle) - genParams.Angle.mean;
                 float segLen = CalculateSegmentLength(length, angle);
 
                 float trueAngle = (counter == 0) ? angle + baseAngle : angle - baseAngle;
@@ -103,7 +87,7 @@ public class LightningGenerator : MonoBehaviour
                 currentLayerLines.Add(newLines[2]);
             }
 
-            if(i != Iterations - 1)
+            if(i != genParams.iterations - 1)
                 lines.Add(currentLayerLines);
         }
 
@@ -183,7 +167,6 @@ public class LightningGenerator : MonoBehaviour
     {
         Clear();
 
-        List<LineSegment> previousLayerLines;
         List<LineSegment> currentLayerLines = new List<LineSegment>();
 
         LineSegment line = new LineSegment();
@@ -192,19 +175,30 @@ public class LightningGenerator : MonoBehaviour
 
         currentLayerLines.Add(line);
 
-        for (int i = 0; i < Iterations; i++)
+        GenerateLayer(currentLayerLines);
+    }
+
+    List<LineSegment> GenerateLayer(List<LineSegment> previousLayer, int depth = 0)
+    {
+        depth++;
+
+        if (depth >= genParams.iterations)
+            return previousLayer;
+
+        List<LineSegment> currentLayer = new List<LineSegment>();
+
+        foreach(var parent in previousLayer)
         {
-            previousLayerLines = new List<LineSegment>(currentLayerLines);
-            currentLayerLines.Clear();
+            Vector3 startPos = parent.p1;
+            Vector3 endPos = parent.p2;
 
-            for (int l = 0; l < previousLayerLines.Count; l++)
-            {
-                Vector3 startPos = previousLayerLines[l].p1;
-                Vector3 endPos = previousLayerLines[l].p2;
 
-                float angle = BoxMuller.Generate(Angle, StandardDeviation) - Angle;
-            }
         }
+
+        if (currentLayer.Count <= 0)
+            return previousLayer;
+        else
+            return GenerateLayer(currentLayer, depth);
     }
 
     private void OnDrawGizmos()

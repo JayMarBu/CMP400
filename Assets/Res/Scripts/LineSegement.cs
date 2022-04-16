@@ -31,6 +31,16 @@ public class LineSegment
     {
         get { return Vector3.Normalize(p2-p1); }
     }
+
+    public float length
+    {
+        get { return Vector3.Magnitude(p2-p1); }
+    }
+
+    public Vector3 centre
+    {
+        get { return Vector3.Lerp(p1, p2, 0.5f); }
+    }
 }
 
 [System.Serializable]
