@@ -30,6 +30,7 @@ public class LightningMeshGenerator : MonoBehaviour
     [SerializeField] public int segmentsPerCapsule = 24;
     [SerializeField] public int verticalPerCapsule = 2;
     [SerializeField] public bool useManualSegmentCount = false;
+    [SerializeField] public bool drawGizmo = false;
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
@@ -43,12 +44,6 @@ public class LightningMeshGenerator : MonoBehaviour
         {
 			// Generate Capsule
 			var data = GenerateCapsule(segment, offset);
-
-			// Jitter Capsule
-			if(GenerationManager.Instance.Params.jitterGeometry)
-            {
-				JitterCapsule(segment, ref data);
-            }
 
 			vertices.AddRange(data.vertices);
 			triangles.AddRange(data.triangles);
@@ -248,16 +243,92 @@ public class LightningMeshGenerator : MonoBehaviour
 
 	TesslInfo CalculateJitterPointCount(float height, float radius)
     {
-		return new TesslInfo();
-    }
+		LineSegment originalLine = new LineSegment();
+
+		originalLine.p1 = Vector3.zero;
+		originalLine.p2 = Vector3.up;
+
+		TesslInfo info = new TesslInfo();
+
+		int jc = 0;
+
+		if (!useManualSegmentCount)
+			jc = Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterPerUnit);
+		else
+			jc = verticalPerCapsule;
+
+		int e = IntPow(2, (uint)jc);
+
+		info.count = e-1;
+
+		List<LineSegment> previousLayer;
+		List<LineSegment> currentLayer = new List<LineSegment>();
+
+		currentLayer.Add(originalLine);
+
+		for (int i = 0; i < jc; i++)
+        {
+			previousLayer = new List<LineSegment>(currentLayer);
+			currentLayer.Clear();
+
+			foreach (var line in previousLayer)
+            {
+				var D = line.direction;
+
+				// choose either the unit Up or Forward axis,
+				// depending on which one has the smaller dot() with D.
+				// ie, which one is more perpendicular to D.
+				// one of them is guaranteed to not be parallel (or anti-parallel) with D.
+				// any two vectors known to be perpendicular to each other will work fine here.
+				float du = Vector3.Dot(D, Vector3.up);
+				float df = Vector3.Dot(D, Vector3.forward);
+				Vector3 v1 = Mathf.Abs(du) < Mathf.Abs(df) ? Vector3.up : Vector3.forward;
+
+				// cross v1 with D. the new vector is perpendicular to both v1 and D.
+				Vector3 v2 = Vector3.Cross(v1, D);
+
+				// rotate v2 around D by a random amount
+				float degrees = Random.Range(0.0f, 360.0f);
+				v2 = Quaternion.AngleAxis(degrees, D.normalized) * v2;
+
+				Vector3 p3 = line.centre + (v2 * line.length * (Random.Range(1f, 10f) * GenerationManager.Instance.Params.jitterSizeModifier));
+
+				currentLayer.Add(new LineSegment(line.p1, p3));
+				currentLayer.Add(new LineSegment(p3, line.p2));
+			}
+		}
+
+		info.segmentPositions = new Vector3[info.count];
+
+		debug_lines = currentLayer;
+
+		int subSegmentCount = info.count + 1;
+		float subSegmentLength = 1f / subSegmentCount;
+		for (int i = 1; i <= info.count; i++)
+		{
+			var offset = new Vector3(currentLayer[i - 1].p2.x, subSegmentLength * i, currentLayer[i-1].p2.z);
+
+			info.segmentPositions[i - 1] = offset;
+		}
+
+		return info;
+	}
+
+	int IntPow(int x, uint pow)
+	{
+		int ret = 1;
+		while (pow != 0)
+		{
+			if ((pow & 1) == 1)
+				ret *= x;
+			x *= x;
+			pow >>= 1;
+		}
+		return ret;
+	}
 
 	TesslInfo CalculateRandomOffsetPointCount(float height, float radius)
     {
-		Vector2 jitterRange = GenerationManager.Instance.Params.jitterSizeModifier;
-
-		if (jitterRange.x > jitterRange.y)
-			jitterRange = new Vector2(jitterRange.y, jitterRange.x);
-
 		TesslInfo info = new TesslInfo();
 		
 		info.count = (useManualSegmentCount)?
@@ -273,21 +344,35 @@ public class LightningMeshGenerator : MonoBehaviour
         {
 			var offset = Random.insideUnitCircle.normalized;
 
-			offset *= ( height * (1/Random.Range(jitterRange.x, jitterRange.y)));
+			offset *= ( height * Random.Range(0.01f, 1f) * GenerationManager.Instance.Params.jitterSizeModifier);
 
 			offset += prevOffset * Mathf.InverseLerp(0f, info.count, i);
 
 			prevOffset = offset;
 
-			info.segmentPositions[i-1] = new Vector3(offset.x,subSegmentLength * i,offset.y);
+			info.segmentPositions[i-1] = new Vector3(offset.x, subSegmentLength * i, offset.y);
         }
 
 		return info;
     }
 
-	public void JitterCapsule(LineSegment lineSegment, ref CapsuleData meshData)
+	List<LineSegment> debug_lines;
+
+    private void OnDrawGizmos()
     {
-		
+		if (!drawGizmo)
+			return;
+
+        if(debug_lines != null)
+        {
+			Vector3 pos = transform.position + Vector3.up;
+
+			Gizmos.color = Color.white;
+			foreach(var line in debug_lines)
+            {
+				Gizmos.DrawLine(line.p1 + pos, line.p2 + pos);
+            }
+        }
     }
 
 }

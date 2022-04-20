@@ -56,8 +56,8 @@ public class GenerationParameters
     [Tooltip(""), SerializeField]                                                           public float splitFraction;
 
     [Header("Render Parameters")]
-    [SerializeField, Min(0.01f)]                                                                        public float jitterPerUnit;
-    [SerializeField]                                                                        public Vector2 jitterSizeModifier;
+    [SerializeField, Min(0.01f)]                                                            public float jitterPerUnit;
+    [SerializeField]                                                                        public float jitterSizeModifier;
     [SerializeField]                                                                        public bool jitterGeometry;
     [SerializeField]                                                                        public TeselationMod jitterMode;
 
@@ -72,11 +72,22 @@ public class GenerationManager : Singleton<GenerationManager>
     [SerializeField, HideInInspector] private BaileyetalGen m_baileyEtAlGenerator;
     [SerializeField, HideInInspector] private LightningGenerator m_jitterAndForkGenerator;
 
+    bool hasGenerated = false;
+
     private void OnGUI()
     {
         if (GUI.Button(new Rect(10, 10, 150, 20), "Generate All"))
         {
+            hasGenerated = true;
             GenerateAll();
+        }
+
+        if (hasGenerated) 
+        {
+            if (GUI.Button(new Rect(10, 40, 150, 20), "Re-Generate Mesh"))
+            {
+                ReGenerateAllMeshes();
+            }
         }
     }
 
@@ -85,10 +96,21 @@ public class GenerationManager : Singleton<GenerationManager>
         Params.D_init = GenerationParameters.nv * Params.V_init;
     }
 
+    private void Start()
+    {
+        hasGenerated = false;
+    }
+
     public void GenerateAll()
     {
         GenerateBaileyEtAl();
         GenerateJitterAndFork();
+    }
+
+    public void ReGenerateAllMeshes()
+    {
+        ReGenerateBaileyEtAlMesh();
+        ReGenerateJitterAndForkMesh();
     }
 
     public void Clear()
@@ -107,5 +129,17 @@ public class GenerationManager : Singleton<GenerationManager>
     {
         Params.D_init = GenerationParameters.nv * Params.V_init;
         m_jitterAndForkGenerator.GenerareLightning();
+    }
+
+    public void ReGenerateBaileyEtAlMesh()
+    {
+        Params.D_init = GenerationParameters.nv * Params.V_init;
+        m_baileyEtAlGenerator.GenerateMesh();
+    }
+
+    public void ReGenerateJitterAndForkMesh()
+    {
+        Params.D_init = GenerationParameters.nv * Params.V_init;
+        m_jitterAndForkGenerator.GenerateMesh();
     }
 }

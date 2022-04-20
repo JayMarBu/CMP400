@@ -33,6 +33,8 @@ public class LightningGenerator : MonoBehaviour
         m_halfedAngle = genParams.Angle / 2;
     }
 
+    public void GenerateMesh() => m_meshGenerator.GenerateMesh(m_lines);
+
     public void GenerareLightning()
     {
         Clear();

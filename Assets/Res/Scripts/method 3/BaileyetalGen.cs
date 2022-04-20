@@ -36,6 +36,8 @@ public class BaileyetalGen : MonoBehaviour
         m_segmentQueue = new Queue<LineSegment>();
     }
 
+    public void GenerateMesh() => m_meshGenerator.GenerateMesh(m_finishedList);
+
     public void Generate()
     {
         Clear();

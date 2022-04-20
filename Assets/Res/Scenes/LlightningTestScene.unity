@@ -229,7 +229,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 310757960}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 6.73, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 104305011}
@@ -501,6 +501,7 @@ MonoBehaviour:
   segmentsPerCapsule: 4
   verticalPerCapsule: 2
   useManualSegmentCount: 0
+  drawGizmo: 0
 --- !u!1 &547044312
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1143,7 @@ MonoBehaviour:
   segmentsPerCapsule: 4
   verticalPerCapsule: 2
   useManualSegmentCount: 0
+  drawGizmo: 0
 --- !u!1 &1093552160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,9 +1236,9 @@ MonoBehaviour:
     iterations: 3
     splitFraction: 0
     jitterPerUnit: 2
-    jitterSizeModifier: {x: 10, y: 100}
+    jitterSizeModifier: 1
     jitterGeometry: 0
-    jitterMode: 2
+    jitterMode: 1
     D_init: 1.26
   m_baileyEtAlGenerator: {fileID: 1913839803}
   m_jitterAndForkGenerator: {fileID: 1148927015}
@@ -1355,8 +1357,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   segmentsPerCapsule: 4
-  verticalPerCapsule: 0
-  useManualSegmentCount: 0
+  verticalPerCapsule: 1
+  useManualSegmentCount: 1
+  drawGizmo: 1
 --- !u!23 &1394419150
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1414,7 +1417,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394419147}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 39.6, y: 0, z: 0}
+  m_LocalPosition: {x: 39.6, y: 5.17, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 310757961}

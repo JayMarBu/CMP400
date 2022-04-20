@@ -13,7 +13,7 @@ public class MeshGeneratorTestBench : MonoBehaviour
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 40, 150, 20), "Generate test mesh"))
+        if (GUI.Button(new Rect(170, 10, 150, 20), "Generate test mesh"))
         {
             GenerateMesh();
         }
@@ -42,8 +42,8 @@ public class MeshGeneratorTestBench : MonoBehaviour
         lineSegment3.d = 0.7f;
 
         lines.Add(lineSegment1);
-        lines.Add(lineSegment2);
-        lines.Add(lineSegment3);
+        //lines.Add(lineSegment2);
+        //lines.Add(lineSegment3);
 
         meshGenerator.GenerateMesh(lines);
     }
