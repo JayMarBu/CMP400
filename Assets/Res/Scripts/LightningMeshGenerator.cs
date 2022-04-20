@@ -253,21 +253,33 @@ public class LightningMeshGenerator : MonoBehaviour
 
 	TesslInfo CalculateRandomOffsetPointCount(float height, float radius)
     {
+		Vector2 jitterRange = GenerationManager.Instance.Params.jitterSizeModifier;
+
+		if (jitterRange.x > jitterRange.y)
+			jitterRange = new Vector2(jitterRange.y, jitterRange.x);
+
 		TesslInfo info = new TesslInfo();
 		
 		info.count = (useManualSegmentCount)?
 			verticalPerCapsule :
-			Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterUnit);
+			Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterPerUnit);
 
 		info.segmentPositions = new Vector3[info.count];
 
 		int subSegmentCount		= info.count + 1;
 		float subSegmentLength	= 1f / subSegmentCount;
+		Vector2 prevOffset = Vector2.zero;
 		for (int i = 1; i <= info.count; i++)
         {
-			//var offset = 
+			var offset = Random.insideUnitCircle.normalized;
 
-			info.segmentPositions[i-1] = new Vector3(0,subSegmentLength * i,0);
+			offset *= ( height * (1/Random.Range(jitterRange.x, jitterRange.y)));
+
+			offset += prevOffset * Mathf.InverseLerp(0f, info.count, i);
+
+			prevOffset = offset;
+
+			info.segmentPositions[i-1] = new Vector3(offset.x,subSegmentLength * i,offset.y);
         }
 
 		return info;

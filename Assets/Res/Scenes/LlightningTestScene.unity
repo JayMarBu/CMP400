@@ -500,6 +500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentsPerCapsule: 4
   verticalPerCapsule: 2
+  useManualSegmentCount: 0
 --- !u!1 &547044312
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,6 +1141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentsPerCapsule: 4
   verticalPerCapsule: 2
+  useManualSegmentCount: 0
 --- !u!1 &1093552160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,7 +1233,8 @@ MonoBehaviour:
     maxRecursionDepth: 500
     iterations: 3
     splitFraction: 0
-    jitterUnit: 4
+    jitterPerUnit: 2
+    jitterSizeModifier: {x: 10, y: 100}
     jitterGeometry: 0
     jitterMode: 2
     D_init: 1.26
@@ -1353,6 +1356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   segmentsPerCapsule: 4
   verticalPerCapsule: 0
+  useManualSegmentCount: 0
 --- !u!23 &1394419150
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -56,7 +56,8 @@ public class GenerationParameters
     [Tooltip(""), SerializeField]                                                           public float splitFraction;
 
     [Header("Render Parameters")]
-    [SerializeField]                                                                        public float jitterUnit;
+    [SerializeField, Min(0.01f)]                                                                        public float jitterPerUnit;
+    [SerializeField]                                                                        public Vector2 jitterSizeModifier;
     [SerializeField]                                                                        public bool jitterGeometry;
     [SerializeField]                                                                        public TeselationMod jitterMode;
 
