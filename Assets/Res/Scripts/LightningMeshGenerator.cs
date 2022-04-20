@@ -2,37 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct TesslInfo
+{
+	public int count;
+	public float[] segmentPositions;
+}
+
+public struct JitterSegment
+{
+	public Vector3 centrePoint;
+	public int[] segmentVertIndices;
+}
+
 public struct CapsuleData
 {
+	public int verticalSegments;
+	public float r;
+	public float h;
 	public int[] triangles;
 	public Vector3[] vertices;
-	public Vector2[] uvs;
+	public JitterSegment[] jitterSegements;
 }
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class LightningMeshGenerator : MonoBehaviour
 {
     [SerializeField] public int segmentsPerCapsule = 24;
-
-    private void OnValidate()
-    {
-        //m_filter = GetComponent<MeshFilter>();
-        //m_renderer = GetComponent<MeshRenderer>();
-    }
+    [SerializeField] public int verticalPerCapsule = 2;
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
 		List<Vector3> vertices = new List<Vector3>();
-		List<Vector2> uvs = new List<Vector2>();
 		List<int> triangles = new List<int>();
+
+		// - Generate Mesh -
 
 		int offset = 0;
 		foreach (var segment in lineSegments)
         {
+			// Generate Capsule
 			var data = GenerateCapsule(segment, offset);
 
+			// Jitter Capsule
+			if(GenerationManager.Instance.Params.jitterGeometry)
+            {
+				JitterCapsule(segment, ref data);
+            }
+
 			vertices.AddRange(data.vertices);
-			uvs.AddRange(data.uvs);
 			triangles.AddRange(data.triangles);
 			offset += data.vertices.Length;
         }
@@ -51,7 +68,6 @@ public class LightningMeshGenerator : MonoBehaviour
 		mesh.name = "ProceduralCapsule";
 
 		mesh.vertices = vertices.ToArray();
-		mesh.uv = uvs.ToArray();
 		mesh.triangles = triangles.ToArray();
 
 		mesh.RecalculateBounds();
@@ -64,8 +80,11 @@ public class LightningMeshGenerator : MonoBehaviour
 		var data = new CapsuleData();
 
 		// set mesh parameters from line segment
-		float height = lineSegment.length + lineSegment.d;
+		float height = (lineSegment.length + lineSegment.d) * 1.005f;
 		float radius = lineSegment.d * 0.5f;
+
+		// calculate tessellation points
+		var tesslInfo = GenerateCapsuleTessellationPointCount(height, radius);
 
 		int segments = segmentsPerCapsule;
 
@@ -76,7 +95,9 @@ public class LightningMeshGenerator : MonoBehaviour
 		if (segments % 2 != 0)
 			segments++;
 
-		segments++;
+		if(GenerationManager.Instance.Params.jitterMode != TeselationMod.None)
+			segments++;
+		//segments += tesslInfo.count;
 
 		// extra vertex on the seam
 		int points = segments + 1;
@@ -102,9 +123,8 @@ public class LightningMeshGenerator : MonoBehaviour
 		}
 
 		// - Vertices -
-
-		data.vertices = new Vector3[points * (points + 1)];
-		data.uvs = new Vector2[data.vertices.Length];
+		int vertTesslOffset = (points + 1) * Mathf.Max(0, tesslInfo.count-1);
+		data.vertices = new Vector3[points * (points + 1) + vertTesslOffset];
 		int ind = 0;
 
 		// Y-offset is half the height minus the diameter
@@ -129,17 +149,14 @@ public class LightningMeshGenerator : MonoBehaviour
 		}
 
 		// middle rings
-		for (int x = 0; x < points; x++)
-		{
-			data.vertices[ind] = new Vector3(pX[x] * pR[top-1], pY[top-1], pZ[x] * pR[top-1]) * radius;
-			data.vertices[ind].y = 0;
-			data.vertices[ind] = rot * data.vertices[ind];
-			data.vertices[ind] += position;
-
-			ind++;
-		}
-
-
+		GenerateVerticalSegments(
+			ref data,
+			ref ind,
+			height, radius, yOff,
+			tesslInfo,
+			points,
+			rot, position,
+			pX, pZ, pY[top-1], pR[top-1]);
 
 		// Bottom Hemisphere
 		int btm = Mathf.FloorToInt((float)points * 0.5f);
@@ -159,10 +176,10 @@ public class LightningMeshGenerator : MonoBehaviour
 
 
 		// - Triangles -
+		int triTesslOffset = (segments + 1) * Mathf.Max(0, tesslInfo.count-1);
+		data.triangles = new int[(segments * (segments + 1) * 2 * 3)+(triTesslOffset * 2 * 3)];
 
-		data.triangles = new int[(segments * (segments + 1) * 2 * 3)];
-
-		for (int y = 0, t = 0; y < segments + 1; y++)
+		for (int y = 0, t = 0; y < segments + Mathf.Max(1, tesslInfo.count); y++)
 		{
 			for (int x = 0; x < segments; x++, t += 6)
 			{
@@ -178,5 +195,74 @@ public class LightningMeshGenerator : MonoBehaviour
 
 		return data;
 	}
-    
+
+	void GenerateVerticalSegments(
+		ref CapsuleData data,							// CapsuleData reference
+		ref int ind,									// Index counter
+		float height, float radius, float yOff,			// LineSegement dimensions
+		TesslInfo tesslInfo,							// tessellation info
+		int points,										// the number of points in the circle
+		Quaternion rot, Vector3 position,				// global position modifiers
+		float[] pX, float[] pZ, float pY, float pR		// pre-generated circle points
+		)
+    {
+		float cyllinderHeight = height - (radius * 2);
+		float halfHeight = cyllinderHeight * 0.5f; 
+		for (int y = 0; y < tesslInfo.count; y++)
+		{
+			for (int x = 0; x < points; x++)
+			{
+				data.vertices[ind] = new Vector3(pX[x] * pR, pY, pZ[x] * pR) * radius;
+				data.vertices[ind].y = halfHeight - (tesslInfo.segmentPositions[y]*cyllinderHeight);
+				data.vertices[ind] = rot * data.vertices[ind];
+				data.vertices[ind] += position;
+
+				ind++;
+			}
+		}
+	}
+
+	TesslInfo GenerateCapsuleTessellationPointCount(float height, float radius)
+    {
+		switch (GenerationManager.Instance.Params.jitterMode)
+		{
+			case TeselationMod.Jitter:
+				return CalculateJitterPointCount(height, radius);
+
+			case TeselationMod.Random_Offset:
+				return CalculateRandomOffsetPointCount(height, radius);
+		}
+
+		return new TesslInfo();
+	}
+
+	TesslInfo CalculateJitterPointCount(float height, float radius)
+    {
+		return new TesslInfo();
+    }
+
+	TesslInfo CalculateRandomOffsetPointCount(float height, float radius)
+    {
+		TesslInfo info = new TesslInfo();
+
+		info.count = verticalPerCapsule;
+
+		//info.count = Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterUnit);
+		info.segmentPositions = new float[info.count];
+
+		int subSegmentCount		= info.count + 1;
+		float subSegmentLength	= 1f / subSegmentCount;
+		for (int i = 1; i <= info.count; i++)
+        {
+			info.segmentPositions[i-1] = subSegmentLength * i;
+        }
+
+		return info;
+    }
+
+	public void JitterCapsule(LineSegment lineSegment, ref CapsuleData meshData)
+    {
+		
+    }
+
 }

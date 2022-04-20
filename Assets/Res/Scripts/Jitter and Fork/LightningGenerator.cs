@@ -43,7 +43,9 @@ public class LightningGenerator : MonoBehaviour
         List<List<LineSegment>> lines = new List<List<LineSegment>>();
 
         LineSegment line = new LineSegment();
-        line.d = 0.2f;
+        line.d = genParams.D_init;
+        line.p = genParams.P_init;
+        line.d_min = (1 / line.p) * BoxMuller.Generate(genParams.gasProperties.A);
         line.p1 = m_startPoint.position;
         line.p2 = m_endPoint.position;
 
@@ -80,12 +82,23 @@ public class LightningGenerator : MonoBehaviour
                 // build line segment
                 LineSegment[] newLines = new LineSegment[3];
 
-                newLines[0] = new LineSegment(startPos, splitPos);
-                newLines[0].d = 0.2f;
-                newLines[1] = new LineSegment(splitPos, endPos);
-                newLines[1].d = 0.2f;
-                newLines[2] = new LineSegment(splitPos, forkPos);
-                newLines[2].d = 0.2f;
+                newLines[0]         = new LineSegment(startPos, splitPos);
+                newLines[0].p       = previousLayerLines[l].p;
+                newLines[0].d_min   = previousLayerLines[l].d_min;
+                newLines[0].d       = previousLayerLines[l].d;
+                newLines[0].L       = newLines[0].length;
+
+                newLines[1]         = new LineSegment(splitPos, endPos);
+                newLines[1].p       = CalculatePressure(splitPos.y);
+                newLines[1].d_min   = CalculateMinDiameter(newLines[0].p);
+                newLines[1].d       = CalculateDiameter(newLines[0].d, newLines[0].d_min, newLines[0].d_min);
+                newLines[1].L       = newLines[0].length;
+
+                newLines[2]         = new LineSegment(splitPos, forkPos);
+                newLines[2].p       = CalculatePressure(splitPos.y);
+                newLines[2].d_min   = CalculateMinDiameter(newLines[0].p);
+                newLines[2].d       = CalculateDiameter(newLines[0].d, newLines[0].d_min, newLines[0].d_min);
+                newLines[2].L       = newLines[0].length;
 
                 currentLayerLines.Add(newLines[0]);
                 currentLayerLines.Add(newLines[1]);
@@ -100,6 +113,16 @@ public class LightningGenerator : MonoBehaviour
 
         m_meshGenerator.GenerateMesh(m_lines);
     }
+
+    float CalculatePressure(float y)
+        => genParams.P_init - genParams.P_m * (y - m_startPoint.position.y);
+
+    float CalculateMinDiameter(float p)
+        => (1 / p) * BoxMuller.Generate(genParams.gasProperties.A);
+
+    float CalculateDiameter(float d_parent, float d_newMin, float d_parentMin)
+        // constant is sqrt(1/2)
+        => 0.70710678118f * d_parent * (d_newMin / d_parentMin);
 
     float CalculateBaseAngle(LineSegment line)
     {

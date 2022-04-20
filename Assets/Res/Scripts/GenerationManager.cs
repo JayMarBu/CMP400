@@ -27,6 +27,13 @@ public struct GasProperties
     }
 }
 
+public enum TeselationMod
+{
+    None            = 0,
+    Jitter          = 1,
+    Random_Offset   = 2
+}
+
 [System.Serializable]
 public class GenerationParameters
 {
@@ -50,6 +57,8 @@ public class GenerationParameters
 
     [Header("Render Parameters")]
     [SerializeField]                                                                        public float jitterUnit;
+    [SerializeField]                                                                        public bool jitterGeometry;
+    [SerializeField]                                                                        public TeselationMod jitterMode;
 
     [Header("Read-only values")]
     [ReadOnly, Tooltip("the starting diameter of the system"), SerializeField]              public float D_init;
