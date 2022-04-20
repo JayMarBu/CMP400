@@ -5,7 +5,7 @@ using UnityEngine;
 public struct TesslInfo
 {
 	public int count;
-	public float[] segmentPositions;
+	public Vector3[] segmentPositions;
 }
 
 public struct JitterSegment
@@ -29,6 +29,7 @@ public class LightningMeshGenerator : MonoBehaviour
 {
     [SerializeField] public int segmentsPerCapsule = 24;
     [SerializeField] public int verticalPerCapsule = 2;
+    [SerializeField] public bool useManualSegmentCount = false;
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
@@ -207,13 +208,22 @@ public class LightningMeshGenerator : MonoBehaviour
 		)
     {
 		float cyllinderHeight = height - (radius * 2);
-		float halfHeight = cyllinderHeight * 0.5f; 
+		float halfHeight = height * 0.5f; 
 		for (int y = 0; y < tesslInfo.count; y++)
 		{
 			for (int x = 0; x < points; x++)
 			{
-				data.vertices[ind] = new Vector3(pX[x] * pR, pY, pZ[x] * pR) * radius;
-				data.vertices[ind].y = halfHeight - (tesslInfo.segmentPositions[y]*cyllinderHeight);
+				float xx, yy, zz;
+
+				xx = pX[x] * pR * radius;
+				xx += tesslInfo.segmentPositions[y].x;
+
+				zz = pZ[x] * pR * radius;
+				zz += tesslInfo.segmentPositions[y].z;
+
+				yy = halfHeight - (tesslInfo.segmentPositions[y].y * height);
+
+				data.vertices[ind] = new Vector3(xx, yy, zz);
 				data.vertices[ind] = rot * data.vertices[ind];
 				data.vertices[ind] += position;
 
@@ -244,17 +254,20 @@ public class LightningMeshGenerator : MonoBehaviour
 	TesslInfo CalculateRandomOffsetPointCount(float height, float radius)
     {
 		TesslInfo info = new TesslInfo();
+		
+		info.count = (useManualSegmentCount)?
+			verticalPerCapsule :
+			Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterUnit);
 
-		info.count = verticalPerCapsule;
-
-		//info.count = Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterUnit);
-		info.segmentPositions = new float[info.count];
+		info.segmentPositions = new Vector3[info.count];
 
 		int subSegmentCount		= info.count + 1;
 		float subSegmentLength	= 1f / subSegmentCount;
 		for (int i = 1; i <= info.count; i++)
         {
-			info.segmentPositions[i-1] = subSegmentLength * i;
+			//var offset = 
+
+			info.segmentPositions[i-1] = new Vector3(0,subSegmentLength * i,0);
         }
 
 		return info;

@@ -42,8 +42,8 @@ public class MeshGeneratorTestBench : MonoBehaviour
         lineSegment3.d = 0.7f;
 
         lines.Add(lineSegment1);
-        //lines.Add(lineSegment2);
-        //lines.Add(lineSegment3);
+        lines.Add(lineSegment2);
+        lines.Add(lineSegment3);
 
         meshGenerator.GenerateMesh(lines);
     }
