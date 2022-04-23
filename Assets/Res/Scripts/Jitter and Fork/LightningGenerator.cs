@@ -68,18 +68,16 @@ public class LightningGenerator : MonoBehaviour
                 float baseAngle = CalculateBaseAngle(previousLayerLines[i]);
 
                 // Jitter
-                float length = CalculateBaseLength(startPos, endPos);
+                float length = previousLayerLines[l].length;
 
                 // TODO: something funky is happening with these angles
                 float angle = BoxMuller.Generate(genParams.Angle) - genParams.Angle.mean;
                 float segLen = CalculateSegmentLength(length, angle);
 
-                float trueAngle = (counter == 0) ? angle + baseAngle : angle - baseAngle;
-
-                Vector3 splitPos = CalculateSplitPoint(startPos, segLen, trueAngle);
+                Vector3 splitPos = CalculateSplitPoint(previousLayerLines[l]);
 
                 // Fork
-                Vector3 forkPos = CalculateForkPoint(splitPos, endPos, segLen *0.75f);
+                Vector3 forkPos = CalculateForkPoint(startPos, splitPos, endPos, segLen *0.75f);
 
                 // build line segment
                 LineSegment[] newLines = new LineSegment[3];
@@ -87,20 +85,20 @@ public class LightningGenerator : MonoBehaviour
                 newLines[0]         = new LineSegment(startPos, splitPos);
                 newLines[0].p       = previousLayerLines[l].p;
                 newLines[0].d_min   = previousLayerLines[l].d_min;
-                newLines[0].d       = previousLayerLines[l].d;
+                newLines[0].d       = CalculateDiameter(previousLayerLines[l].d, newLines[0].d_min, newLines[0].d_min, splitPos.y);
                 newLines[0].L       = newLines[0].length;
 
                 newLines[1]         = new LineSegment(splitPos, endPos);
                 newLines[1].p       = CalculatePressure(splitPos.y);
                 newLines[1].d_min   = CalculateMinDiameter(newLines[0].p);
-                newLines[1].d       = CalculateDiameter(newLines[0].d, newLines[0].d_min, newLines[0].d_min);
-                newLines[1].L       = newLines[0].length;
+                newLines[1].d       = CalculateDiameter(newLines[0].d, newLines[1].d_min, newLines[0].d_min, endPos.y);
+                newLines[1].L       = newLines[1].length;
 
                 newLines[2]         = new LineSegment(splitPos, forkPos);
                 newLines[2].p       = CalculatePressure(splitPos.y);
                 newLines[2].d_min   = CalculateMinDiameter(newLines[0].p);
-                newLines[2].d       = CalculateDiameter(newLines[0].d, newLines[0].d_min, newLines[0].d_min);
-                newLines[2].L       = newLines[0].length;
+                newLines[2].d       = CalculateDiameter(newLines[0].d, newLines[2].d_min, newLines[0].d_min, forkPos.y);
+                newLines[2].L       = newLines[2].length;
 
                 currentLayerLines.Add(newLines[0]);
                 currentLayerLines.Add(newLines[1]);
@@ -122,9 +120,13 @@ public class LightningGenerator : MonoBehaviour
     float CalculateMinDiameter(float p)
         => (1 / p) * BoxMuller.Generate(genParams.gasProperties.A);
 
-    float CalculateDiameter(float d_parent, float d_newMin, float d_parentMin)
+    float CalculateDiameter(float d_parent, float d_newMin, float d_parentMin, float y)
+    {
         // constant is sqrt(1/2)
-        => 0.70710678118f * d_parent * (d_newMin / d_parentMin);
+        var d = 0.70710678118f * d_parent * (d_newMin / d_parentMin);
+
+        return d + (d*0.2f* Mathf.InverseLerp(m_endPoint.position.y, m_startPoint.position.y, y));
+    }
 
     float CalculateBaseAngle(LineSegment line)
     {
@@ -155,82 +157,53 @@ public class LightningGenerator : MonoBehaviour
 		return (baseLength* 0.5f) / Mathf.Cos(ang);
 	}
 
-    Vector3 CalculateSplitPoint(Vector3 startPos, float segment_length, float angle)
+    Vector3 CalculateSplitPoint(LineSegment parentLine)
 	{
-		/*
-		 xlen = opp
-		 ylen = adj
-		 segment_length = hyp
-		 angle = theta
+        Vector3 D = parentLine.direction;
 
-		 opp = hyp * sin(theta)
-		 adj = hyp * cos(theta)
-		*/
-		float xlen, ylen;
+        float du = Vector3.Dot(D, Vector3.up);
+        float df = Vector3.Dot(D, Vector3.forward);
+        Vector3 v1 = Mathf.Abs(du) < Mathf.Abs(df) ? Vector3.up : Vector3.forward;
 
-        Vector2 xz = Random.insideUnitCircle.normalized;
+        // cross v1 with D. the new vector is perpendicular to both v1 and A.
+        Vector3 v2 = Vector3.Cross(v1, D);
 
-        xlen = segment_length * Mathf.Sin(Mathf.Deg2Rad * angle);
-        ylen = segment_length * Mathf.Cos(Mathf.Deg2Rad * angle);
+        // rotate v2 around D by a random amount
+        float degrees = Random.Range(0.0f, 360.0f);
+        v2 = Quaternion.AngleAxis(degrees, D.normalized) * v2;
 
-        return new Vector3(startPos.x - (xlen*xz.x), startPos.y - ylen, startPos.z - (xlen*xz.y));
+        float rand = Random.Range(0.25f, 1.25f);
+
+        return parentLine.centre + (v2.normalized * parentLine.length * 0.25f * rand);
 	}
 
-    Vector3 CalculateForkPoint(Vector3 splitPos, Vector3 endPos, float len)
+    Vector3 CalculateForkPoint(Vector3 startPos, Vector3 splitPos, Vector3 endPos, float len)
     {
-        /*
-		 xlen = opp
-		 ylen = adj
-		 segment_length = hyp
-		 angle = theta
+        Vector3 parDir = (splitPos - startPos).normalized;
 
-		 opp = hyp * sin(theta)
-		 adj = hyp * cos(theta)
-		*/
+        //return splitPos + (parDir * len);
 
-        Vector3 dirVec = Vector3.Normalize(splitPos - endPos);
-        dirVec.y *= -1;
-        Vector3 forkPos = splitPos + (dirVec * len);
+        Vector3 unitCirclePoint = Random.insideUnitCircle;
+        var rot = Quaternion.FromToRotation(Vector3.forward, parDir);
+        Vector3 unitConePoint = rot * unitCirclePoint;
 
-        return forkPos;
+        Vector3 dirVector = (splitPos + unitConePoint) - (splitPos);
+        dirVector.Normalize();
+
+        float theta = Mathf.Deg2Rad * BoxMuller.Generate(m_halfedAngle);
+
+        return GenerateConeSegment(splitPos, parDir, dirVector, theta, len);
     }
 
-    public void BetterGenerateLightning()
+    Vector3 GenerateConeSegment(Vector3 startPoint, Vector3 direction, Vector3 perpendicularVec, float theta, float L)
     {
-        Clear();
+        float paraOffset = L * Mathf.Cos(theta);
+        float perpOffset = L * Mathf.Sin(theta);
 
-        List<LineSegment> currentLayerLines = new List<LineSegment>();
+        Vector3 paraVec = direction * paraOffset;
+        Vector3 perpVec = perpendicularVec * perpOffset;
 
-        LineSegment line = new LineSegment();
-        line.p1 = m_startPoint.position;
-        line.p2 = m_endPoint.position;
-
-        currentLayerLines.Add(line);
-
-        GenerateLayer(currentLayerLines);
-    }
-
-    List<LineSegment> GenerateLayer(List<LineSegment> previousLayer, int depth = 0)
-    {
-        depth++;
-
-        if (depth >= genParams.iterations)
-            return previousLayer;
-
-        List<LineSegment> currentLayer = new List<LineSegment>();
-
-        foreach(var parent in previousLayer)
-        {
-            Vector3 startPos = parent.p1;
-            Vector3 endPos = parent.p2;
-
-
-        }
-
-        if (currentLayer.Count <= 0)
-            return previousLayer;
-        else
-            return GenerateLayer(currentLayer, depth);
+        return startPoint + paraVec + perpVec;
     }
 
     private void OnDrawGizmos()

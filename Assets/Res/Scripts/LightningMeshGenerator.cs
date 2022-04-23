@@ -148,11 +148,11 @@ public class LightningMeshGenerator : MonoBehaviour
 		GenerateVerticalSegments(
 			ref data,
 			ref ind,
-			height, radius, yOff,
+			height, radius,
 			tesslInfo,
 			points,
 			rot, position,
-			pX, pZ, pY[top-1], pR[top-1]);
+			pX, pZ, pR[top-1]);
 
 		// Bottom Hemisphere
 		int btm = Mathf.FloorToInt((float)points * 0.5f);
@@ -195,14 +195,13 @@ public class LightningMeshGenerator : MonoBehaviour
 	void GenerateVerticalSegments(
 		ref CapsuleData data,							// CapsuleData reference
 		ref int ind,									// Index counter
-		float height, float radius, float yOff,			// LineSegement dimensions
+		float height, float radius,						// LineSegement dimensions
 		TesslInfo tesslInfo,							// tessellation info
 		int points,										// the number of points in the circle
 		Quaternion rot, Vector3 position,				// global position modifiers
-		float[] pX, float[] pZ, float pY, float pR		// pre-generated circle points
+		float[] pX, float[] pZ, float pR				// pre-generated circle points
 		)
     {
-		float cyllinderHeight = height - (radius * 2);
 		float halfHeight = height * 0.5f; 
 		for (int y = 0; y < tesslInfo.count; y++)
 		{
@@ -256,6 +255,8 @@ public class LightningMeshGenerator : MonoBehaviour
 			jc = Mathf.RoundToInt(height / GenerationManager.Instance.Params.jitterPerUnit);
 		else
 			jc = verticalPerCapsule;
+
+		jc = Mathf.Clamp(jc, GenerationManager.Instance.Params.jitterMinDepth, GenerationManager.Instance.Params.jitterMaxDepth);
 
 		int e = IntPow(2, (uint)jc);
 

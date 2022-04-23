@@ -58,6 +58,8 @@ public class GenerationParameters
     [Header("Render Parameters")]
     [SerializeField, Min(0.01f)]                                                            public float jitterPerUnit;
     [SerializeField]                                                                        public float jitterSizeModifier;
+    [SerializeField, Min(1)]                                                                public int jitterMaxDepth;
+    [SerializeField, Min(1)]                                                                public int jitterMinDepth;
     [SerializeField]                                                                        public bool jitterGeometry;
     [SerializeField]                                                                        public TeselationMod jitterMode;
 
