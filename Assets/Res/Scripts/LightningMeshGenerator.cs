@@ -28,7 +28,7 @@ public class LightningMeshGenerator : MonoBehaviour
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
-		var timer = new Timer("mesh");
+		var timer = new Timer("mesh gen");
 
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
@@ -46,7 +46,11 @@ public class LightningMeshGenerator : MonoBehaviour
 			offset += data.vertices.Length;
         }
 
+		timer.Dispose();
+
 		// - Assign Mesh -
+
+		timer = new Timer("mesh assign");
 
 		MeshFilter mf = gameObject.GetComponent<MeshFilter>();
 		Mesh mesh = mf.sharedMesh;

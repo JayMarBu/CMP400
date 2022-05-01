@@ -62,17 +62,11 @@ public class LightningGenerator : MonoBehaviour
 
             for (int l = 0; l < previousLayerLines.Count; l++ )
             {
-                int counter = l % 2;
-
                 Vector3 startPos = previousLayerLines[l].p1;
                 Vector3 endPos = previousLayerLines[l].p2;
 
-                float baseAngle = CalculateBaseAngle(previousLayerLines[i]);
-
                 // Jitter
                 float length = previousLayerLines[l].length;
-
-                // TODO: something funky is happening with these angles
                 float angle = BoxMuller.Generate(genParams.Angle) - genParams.Angle.mean;
                 float segLen = CalculateSegmentLength(length, angle);
 
@@ -131,28 +125,6 @@ public class LightningGenerator : MonoBehaviour
 
         return d + (d*0.2f* Mathf.InverseLerp(m_endPoint.position.y, m_startPoint.position.y, y));
     }
-
-    float CalculateBaseAngle(LineSegment line)
-    {
-        float x = line.p1.x - line.p2.x;
-        float y = line.p1.y - line.p2.y;
-        float z = line.p1.z - line.p2.z;
-
-        float theta = Mathf.Atan(x/y);
-
-        return -1 * (Mathf.Rad2Deg *theta);
-    }
-
-    float CalculateBaseLength(Vector3 startPos, Vector3 endPos)
-	{
-        float x = startPos.x - endPos.x;
-        float y = startPos.y - endPos.y;
-        float z = startPos.z - endPos.z;
-
-        float length = Mathf.Sqrt((x * x) + (y * y) + (z * z));
-
-		return length;
-	}
 
     float CalculateSegmentLength(float baseLength, float angle)
 	{

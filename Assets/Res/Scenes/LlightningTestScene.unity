@@ -1180,13 +1180,17 @@ MonoBehaviour:
   testInProgress: 0
   Tests:
   - name: jf_test
-    testIterations: 10
+    testIterations: 100
     headers:
     - name: generation
       subHeaders:
       - ms
       - ns
-    - name: mesh
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
       subHeaders:
       - ms
       - ns
@@ -1199,13 +1203,17 @@ MonoBehaviour:
       jitterMode: 1
     type: 0
   - name: bea_test
-    testIterations: 10
+    testIterations: 100
     headers:
     - name: generation
       subHeaders:
       - ms
       - ns
-    - name: mesh
+    - name: mesh creation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh assignment
       subHeaders:
       - ms
       - ns

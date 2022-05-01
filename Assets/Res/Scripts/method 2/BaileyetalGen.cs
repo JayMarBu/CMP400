@@ -40,6 +40,8 @@ public class BaileyetalGen : MonoBehaviour
 
     public void Generate()
     {
+        var timer = new Timer("generation");
+
         Clear();
 
         // calculate initial values
@@ -62,6 +64,7 @@ public class BaileyetalGen : MonoBehaviour
         // recurse generating more
         GenerateChildren();
 
+        timer.Dispose();
 
         //ProfilerController.BEAData.meshMarker.Begin();
         m_meshGenerator.GenerateMesh(m_finishedList);
