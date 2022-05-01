@@ -1179,7 +1179,7 @@ MonoBehaviour:
   frameBreak: 5
   testInProgress: 0
   Tests:
-  - name: jf_test
+  - name: JF_3_J_JPU2_D51
     testIterations: 100
     headers:
     - name: generation
@@ -1202,18 +1202,317 @@ MonoBehaviour:
       jitterMinDepth: 1
       jitterMode: 1
     type: 0
-  - name: bea_test
+  - name: JF_3_J_JPU1_D51
     testIterations: 100
     headers:
     - name: generation
       subHeaders:
       - ms
       - ns
-    - name: mesh creation
+    - name: mesh gen
       subHeaders:
       - ms
       - ns
-    - name: mesh assignment
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 0
+  - name: JF_3_J_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 1
+    type: 0
+  - name: JF_4_J_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 0
+  - name: JF_4_J_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 0
+  - name: JF_4_J_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 1
+    type: 0
+  - name: JF_3_RO_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 0
+  - name: JF_3_RO_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 0
+  - name: JF_3_RO_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 2
+    type: 0
+  - name: JF_4_RO_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 0
+  - name: JF_4_RO_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 0
+  - name: JF_4_RO_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 2
+    type: 0
+  - name: JF_3_NT
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 0
+    type: 0
+  - name: JF_4_NT
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 4
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 0
+    type: 0
+  - name: BEA_100_J_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
       subHeaders:
       - ms
       - ns
@@ -1224,6 +1523,305 @@ MonoBehaviour:
       jitterMaxDepth: 5
       jitterMinDepth: 1
       jitterMode: 1
+    type: 1
+  - name: BEA_500_J_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 1
+  - name: BEA_100_J_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 1
+  - name: BEA_500_J_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 1
+  - name: BEA_100_J_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 1
+    type: 1
+  - name: BEA_500_J_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 1
+    type: 1
+  - name: BEA_100_RO_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 1
+  - name: BEA_500_RO_JPU2_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 1
+  - name: BEA_100_RO_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 1
+  - name: BEA_500_RO_JPU1_D51
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 1
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 2
+    type: 1
+  - name: BEA_100_RO_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 2
+    type: 1
+  - name: BEA_500_RO_JPU2_D52
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 2
+    type: 1
+  - name: BEA_100_NT
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 0
+    type: 1
+  - name: BEA_500_NT
+    testIterations: 100
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh gen
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh build
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 500
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 2
+      jitterMode: 0
     type: 1
 --- !u!1 &1148927014
 GameObject:
