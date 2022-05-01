@@ -111,7 +111,9 @@ public class LightningGenerator : MonoBehaviour
 
         m_lines = currentLayerLines;
 
+        //ProfilerController.JFData.meshMarker.Begin();
         m_meshGenerator.GenerateMesh(m_lines);
+        //ProfilerController.JFData.meshMarker.End();
     }
 
     float CalculatePressure(float y)

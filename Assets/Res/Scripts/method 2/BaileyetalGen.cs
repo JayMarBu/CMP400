@@ -62,7 +62,10 @@ public class BaileyetalGen : MonoBehaviour
         // recurse generating more
         GenerateChildren();
 
+
+        //ProfilerController.BEAData.meshMarker.Begin();
         m_meshGenerator.GenerateMesh(m_finishedList);
+        //ProfilerController.BEAData.meshMarker.End();
     }
 
     public void GenerateChildren(int depth = 0)

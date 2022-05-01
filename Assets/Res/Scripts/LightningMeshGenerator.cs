@@ -1,17 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Profiling;
 
 public struct TesslInfo
 {
 	public int count;
 	public Vector3[] segmentPositions;
-}
-
-public struct JitterSegment
-{
-	public Vector3 centrePoint;
-	public int[] segmentVertIndices;
 }
 
 public struct CapsuleData
@@ -21,7 +16,6 @@ public struct CapsuleData
 	public float h;
 	public int[] triangles;
 	public Vector3[] vertices;
-	public JitterSegment[] jitterSegements;
 }
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -34,6 +28,7 @@ public class LightningMeshGenerator : MonoBehaviour
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
+
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
 
@@ -228,6 +223,8 @@ public class LightningMeshGenerator : MonoBehaviour
 
 	TesslInfo GenerateCapsuleTessellationPointCount(float height, float radius)
     {
+		//pData.tesslMarker.Begin();
+
 		switch (GenerationManager.Instance.Params.jitterMode)
 		{
 			case TeselationMod.Jitter:
@@ -237,6 +234,7 @@ public class LightningMeshGenerator : MonoBehaviour
 				return CalculateRandomOffsetPointCount(height, radius);
 		}
 
+		//pData.meshMarker.End();
 		return new TesslInfo();
 	}
 

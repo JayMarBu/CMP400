@@ -63,7 +63,6 @@ public class GenerationParameters
     [SerializeField]                                                                        public float jitterSizeModifier;
     [SerializeField, Min(1)]                                                                public int jitterMaxDepth;
     [SerializeField, Min(1)]                                                                public int jitterMinDepth;
-    [SerializeField]                                                                        public bool jitterGeometry;
     [SerializeField]                                                                        public TeselationMod jitterMode;
 
     [Header("Read-only values")]
@@ -139,12 +138,10 @@ public class GenerationManager : Singleton<GenerationManager>
     public void ReGenerateBaileyEtAlMesh()
     {
         Params.D_init = GenerationParameters.nv * Params.V_init;
-        m_baileyEtAlGenerator.GenerateMesh();
     }
 
     public void ReGenerateJitterAndForkMesh()
     {
         Params.D_init = GenerationParameters.nv * Params.V_init;
-        m_jitterAndForkGenerator.GenerateMesh();
     }
 }
