@@ -37,6 +37,8 @@ public class LightningGenerator : MonoBehaviour
 
     public void GenerareLightning()
     {
+        var timer = new Timer("generation");
+
         Clear();
 
         List<LineSegment> previousLayerLines;
@@ -111,9 +113,9 @@ public class LightningGenerator : MonoBehaviour
 
         m_lines = currentLayerLines;
 
-        //ProfilerController.JFData.meshMarker.Begin();
+        timer.Dispose();
+
         m_meshGenerator.GenerateMesh(m_lines);
-        //ProfilerController.JFData.meshMarker.End();
     }
 
     float CalculatePressure(float y)

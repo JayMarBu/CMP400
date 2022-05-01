@@ -28,6 +28,7 @@ public class LightningMeshGenerator : MonoBehaviour
 
     public void GenerateMesh(List<LineSegment> lineSegments)
     {
+		var timer = new Timer("mesh");
 
 		List<Vector3> vertices = new List<Vector3>();
 		List<int> triangles = new List<int>();
@@ -64,6 +65,8 @@ public class LightningMeshGenerator : MonoBehaviour
 		mesh.RecalculateBounds();
 		mesh.RecalculateNormals();
 		mesh.Optimize();
+
+		timer.Dispose();
 	}
 
 	public CapsuleData GenerateCapsule(LineSegment lineSegment, int offset)

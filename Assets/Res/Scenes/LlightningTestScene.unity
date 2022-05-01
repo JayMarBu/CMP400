@@ -1176,11 +1176,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55037743a66603046a3f369410ed40fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  testName: 
-  testDuration: 100
   frameBreak: 5
-  testType: 0
   testInProgress: 0
+  Tests:
+  - name: jf_test
+    testIterations: 10
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 0
+  - name: bea_test
+    testIterations: 10
+    headers:
+    - name: generation
+      subHeaders:
+      - ms
+      - ns
+    - name: mesh
+      subHeaders:
+      - ms
+      - ns
+    genParams:
+      maxRecursionDepth: 100
+      iterations: 3
+      jitterPerUnit: 2
+      jitterMaxDepth: 5
+      jitterMinDepth: 1
+      jitterMode: 1
+    type: 1
 --- !u!1 &1148927014
 GameObject:
   m_ObjectHideFlags: 0

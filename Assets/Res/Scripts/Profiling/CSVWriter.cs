@@ -9,16 +9,10 @@ public class CSVWriter
     public string filename = "test.csv";
     public string file = "";
 
-    struct Data
-    {
-        public TimePair genTime;
-        public TimePair meshTime;
-    }
-
     public CSVWriter(string name)
     {
         filename = name;
-        filepath = Application.dataPath + "/" + name;
+        filepath = Application.dataPath + "/Tests/" + name;
     }
 
     public void WriteLine(string line, bool encoding = true)

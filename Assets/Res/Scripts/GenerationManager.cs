@@ -67,6 +67,17 @@ public class GenerationParameters
 
     [Header("Read-only values")]
     [ReadOnly, Tooltip("the starting diameter of the system"), SerializeField]              public float D_init;
+
+    public void SetTestData(TestParameters p)
+    {
+        maxRecursionDepth   = p.maxRecursionDepth;
+        iterations          = p.iterations;
+
+        jitterPerUnit       = p.jitterPerUnit;
+        jitterMaxDepth      = p.jitterMaxDepth;
+        jitterMinDepth      = p.jitterMinDepth;
+        jitterMode          = p.jitterMode;
+    }
 }
 
 public class GenerationManager : Singleton<GenerationManager>

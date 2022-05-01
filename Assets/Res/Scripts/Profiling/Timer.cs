@@ -25,6 +25,7 @@ public class Timer : IDisposable
     public void Stop()
     {
         sw.Stop();
+        WriteToFile();
         ShowTime(sw.ElapsedTicks, "Timer: " + name + ", elapsed in: ");
     }
 
@@ -35,12 +36,17 @@ public class Timer : IDisposable
         UnityEngine.Debug.Log(message + "\n " + milliseconds + "ms" + " [" + nanoseconds + "ns]");
     }
 
-    public TimePair GetTime()
+    public TimePair GetTime(double ticks)
     {
         TimePair tp = new TimePair();
-        tp.milliseconds = (sw.ElapsedTicks / Stopwatch.Frequency) * 1000;
-        tp.nanoseconds = (sw.ElapsedTicks / Stopwatch.Frequency) * 1000000000;
+        tp.milliseconds = (ticks / Stopwatch.Frequency) * 1000;
+        tp.nanoseconds = (ticks / Stopwatch.Frequency) * 1000000000;
         return tp;
+    }
+
+    public void WriteToFile()
+    {
+        MyProfiler.Instance.timePairs.Enqueue(GetTime(sw.ElapsedTicks));
     }
 }
 
