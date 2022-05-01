@@ -53,9 +53,12 @@ public class GenerationParameters
 
     [Header("Jitter and Fork parameters")]
     [Tooltip("the number of iterations to be used"), SerializeField]                        public int iterations;
-    [Tooltip(""), SerializeField]                                                           public float splitFraction;
 
     [Header("Render Parameters")]
+    [SerializeField]                                                                        public float diameterThinner;
+
+    [Space]
+
     [SerializeField, Min(0.01f)]                                                            public float jitterPerUnit;
     [SerializeField]                                                                        public float jitterSizeModifier;
     [SerializeField, Min(1)]                                                                public int jitterMaxDepth;

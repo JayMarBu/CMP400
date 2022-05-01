@@ -77,7 +77,7 @@ public class LightningMeshGenerator : MonoBehaviour
 
 		// set mesh parameters from line segment
 		float height = (lineSegment.length + lineSegment.d) * 1.005f;
-		float radius = lineSegment.d * 0.5f;
+		float radius = lineSegment.d * 0.5f * GenerationManager.Instance.Params.diameterThinner;
 
 		// calculate tessellation points
 		var tesslInfo = GenerateCapsuleTessellationPointCount(height, radius);
