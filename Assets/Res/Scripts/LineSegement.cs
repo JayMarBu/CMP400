@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [System.Serializable]
 public class LineSegment
 {
-    [HideInInspector, NonSerialized] public LineSegment parent;
-    [HideInInspector, NonSerialized] public List<LineSegment> child;
-
     [ReadOnly] public float d;
     [ReadOnly] public float d_min;
     [ReadOnly] public float L;

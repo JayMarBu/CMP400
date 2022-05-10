@@ -20,11 +20,6 @@ public class LightningGenerator : MonoBehaviour
 
     private RangePair m_halfedAngle;
 
-    private void Start()
-    {
-        //GenerareLightning();
-    }
-
     public void Clear()
     {
         if(m_lines != null && m_lines.Count > 0)
@@ -62,18 +57,18 @@ public class LightningGenerator : MonoBehaviour
 
             for (int l = 0; l < previousLayerLines.Count; l++ )
             {
-                Vector3 startPos = previousLayerLines[l].p1;
-                Vector3 endPos = previousLayerLines[l].p2;
+                Vector3 startPos    = previousLayerLines[l].p1;
+                Vector3 endPos      = previousLayerLines[l].p2;
 
                 // Jitter
-                float length = previousLayerLines[l].length;
-                float angle = BoxMuller.Generate(genParams.Angle) - genParams.Angle.mean;
-                float segLen = CalculateSegmentLength(length, angle);
+                float length        = previousLayerLines[l].length;
+                float angle         = BoxMuller.Generate(genParams.Angle) - genParams.Angle.mean;
+                float segLen        = CalculateSegmentLength(length, angle);
 
-                Vector3 splitPos = CalculateSplitPoint(previousLayerLines[l]);
+                Vector3 splitPos    = CalculateSplitPoint(previousLayerLines[l]);
 
                 // Fork
-                Vector3 forkPos = CalculateForkPoint(startPos, splitPos, endPos, segLen *0.75f);
+                Vector3 forkPos     = CalculateForkPoint(startPos, splitPos, endPos, segLen *0.75f);
 
                 // build line segment
                 LineSegment[] newLines = new LineSegment[3];

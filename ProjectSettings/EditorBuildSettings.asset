@@ -5,7 +5,7 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Res/Scenes/LlightningTestScene.unity
+    guid: 65aa4ccf429402e47a6355d27e31cd56
   m_configObjects: {}

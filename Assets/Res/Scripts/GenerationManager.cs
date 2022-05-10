@@ -68,6 +68,39 @@ public class GenerationParameters
     [Header("Read-only values")]
     [ReadOnly, Tooltip("the starting diameter of the system"), SerializeField]              public float D_init;
 
+    public GenerationParameters()
+    {
+
+    }
+
+    public GenerationParameters(GenerationParameters other)
+    {
+        SetParams(other);
+    }
+
+    public void SetParams(GenerationParameters other)
+    {
+        V_init              = other.V_init;
+        P_init              = other.P_init;
+        P_m                 = other.P_m;
+
+        Angle               = other.Angle;
+
+        gasProperties       = other.gasProperties;
+
+        maxRecursionDepth   = other.maxRecursionDepth;
+
+        iterations          = other.iterations;
+
+        diameterThinner     = other.diameterThinner;
+
+        jitterPerUnit       = other.jitterPerUnit;
+        jitterSizeModifier  = other.jitterSizeModifier;
+        jitterMaxDepth      = other.jitterMaxDepth;
+        jitterMinDepth      = other.jitterMinDepth;
+        jitterMode          = other.jitterMode;
+    }
+
     public void SetTestData(TestParameters p)
     {
         maxRecursionDepth   = p.maxRecursionDepth;
@@ -91,7 +124,7 @@ public class GenerationManager : Singleton<GenerationManager>
 
     private void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 150, 20), "Generate All"))
+        /*if (GUI.Button(new Rect(10, 10, 150, 20), "Generate All"))
         {
             hasGenerated = true;
             GenerateAll();
@@ -103,7 +136,7 @@ public class GenerationManager : Singleton<GenerationManager>
             {
                 ReGenerateAllMeshes();
             }
-        }
+        }*/
     }
 
     private void OnValidate()
@@ -118,12 +151,16 @@ public class GenerationManager : Singleton<GenerationManager>
 
     public void GenerateAll()
     {
+        if (!hasGenerated)
+            hasGenerated = true;
         GenerateBaileyEtAl();
         GenerateJitterAndFork();
     }
 
     public void ReGenerateAllMeshes()
     {
+        if (!hasGenerated)
+            return;
         ReGenerateBaileyEtAlMesh();
         ReGenerateJitterAndForkMesh();
     }
@@ -149,10 +186,12 @@ public class GenerationManager : Singleton<GenerationManager>
     public void ReGenerateBaileyEtAlMesh()
     {
         Params.D_init = GenerationParameters.nv * Params.V_init;
+        m_baileyEtAlGenerator.GenerateMesh();
     }
 
     public void ReGenerateJitterAndForkMesh()
     {
         Params.D_init = GenerationParameters.nv * Params.V_init;
+        m_jitterAndForkGenerator.GenerateMesh();
     }
 }
